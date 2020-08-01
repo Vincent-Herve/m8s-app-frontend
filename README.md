@@ -1,1 +1,1 @@
-# tp-project-m8s
+# m8s-app-frontend
