@@ -11,6 +11,7 @@ const HeaderStyled = styled.header`
 
     &:hover {
       color: #ff8800;
+      text-decoration: none;
     }
   }
 
@@ -33,6 +34,11 @@ const HeaderStyled = styled.header`
       color: #ff8800;
       font-family: ${theme.fonts.title};
     }
+  }
+
+  .currentPath {
+    color: #ff8800;
+    text-decoration: underline;
   }
 
   @media screen and (max-width: 770px) {

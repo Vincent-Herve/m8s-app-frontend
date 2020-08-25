@@ -93,7 +93,10 @@ const ResetPassword = ({
 
 ResetPassword.propTypes = {
   getResetPassword: PropTypes.func.isRequired,
-  reset: PropTypes.node.isRequired,
+  reset: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
   changeField: PropTypes.func.isRequired,
   setMessageError: PropTypes.func.isRequired,
   messageError: PropTypes.string.isRequired,

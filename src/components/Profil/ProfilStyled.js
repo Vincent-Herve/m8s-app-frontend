@@ -125,6 +125,10 @@ const ProfilStyled = styled.main`
     font-weight: bold;
   }
 
+.currentTab {
+  padding: .4rem;
+}
+
 @media screen and (max-width: 770px) {
   .contain-card {
     display: flex;

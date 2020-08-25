@@ -68,7 +68,7 @@ const App = (
 
   return (
     <AppStyled>
-      <Header />
+      <Header currentPath={pathname} />
       {redirection && <Redirect to="/" />}
       <Switch>
         <Route path="/" exact render={() => <><Home isLoading={isLoading} />{!isLogged && <CardsActivity isLoading={isLoading} />}</>} />

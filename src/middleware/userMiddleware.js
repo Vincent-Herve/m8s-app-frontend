@@ -16,30 +16,12 @@ import {
   UNSUBSCRIBE,
   signout,
   EDIT_PROFIL,
-  registerUserActivity,
-  deleteUserActivity,
   messageError,
-  GET_RESET_PASSWORD,
-  setReset,
-  PATCH_RESET_PASSWORD,
-  GET_VERIFY_ACCOUNT,
-  setIsVerified,
 } from 'src/actions/user';
-
-import {
-  FETCH_ACTIVITIES,
-  saveActivities,
-  CREATE_ACTIVITY,
-  REGISTER_ACTIVITY,
-  LEFT_ACTIVITY,
-  redirectionCreate,
-} from '../actions/activities';
-
-import { saveTags } from '../actions/tag';
 
 const baseUrl = 'http://localhost:3000';
 
-const ajaxMiddleware = (store) => (next) => (action) => {
+const userMiddleware = (store) => (next) => (action) => {
   switch (action.type) {
     case SUBMIT_CONNECT: {
       const state = store.getState();
@@ -171,6 +153,7 @@ const ajaxMiddleware = (store) => (next) => (action) => {
       next(action);
       break;
     }
+
     case EDIT_PROFIL: {
       const { token, userId } = sessionStorage;
       const state = store.getState();
@@ -216,151 +199,10 @@ const ajaxMiddleware = (store) => (next) => (action) => {
       next(action);
       break;
     }
-    case FETCH_ACTIVITIES: {
-      axios.all([
-        axios.get(`${baseUrl}/activity`),
-        axios.get(`${baseUrl}/tag`),
-      ])
-        .then(axios.spread((activities, tags) => {
-          // do something with both responses
-          setTimeout(() => {
-            store.dispatch(saveTags(tags.data));
-            store.dispatch(saveActivities(activities.data));
-          }, 700);
-        }));
 
-      next(action);
-      break;
-    }
-    case CREATE_ACTIVITY: {
-      const state = store.getState();
-      const { userId } = state.user;
-      const {
-        title,
-        description,
-        // eslint-disable-next-line camelcase
-        free_place,
-        location,
-        date,
-        hour,
-      } = state.activities;
-      const { tagId } = state.tag;
-      axios.post(`${baseUrl}/activity`, {
-        title,
-        description,
-        free_place,
-        location,
-        date,
-        hour,
-        tagId,
-        userId,
-      })
-        .then(() => {
-          store.dispatch(isLoading());
-          setTimeout(() => {
-            store.dispatch(isLoading());
-            store.dispatch(redirectionCreate());
-          }, 1500);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      next(action);
-      break;
-    }
-
-    case REGISTER_ACTIVITY: {
-      // eslint-disable-next-line prefer-destructuring
-      const userId = action.user;
-      axios.post(`${baseUrl}/activity/${action.id}/user`, {
-        userId,
-      })
-        .then(() => {
-          store.dispatch(registerUserActivity());
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      next(action);
-      break;
-    }
-
-    case LEFT_ACTIVITY: {
-      // eslint-disable-next-line prefer-destructuring
-      axios.delete(`${baseUrl}/activity/${action.id}/user/${action.user}`, {
-      })
-        .then(() => {
-          store.dispatch(deleteUserActivity());
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      next(action);
-      break;
-    }
-
-    case GET_RESET_PASSWORD: {
-      const { token } = action;
-      axios.post('/api/reset-password', {
-        token,
-      })
-        .then((response) => {
-          if (response.data.reset) {
-            store.dispatch(setReset(true));
-          }
-        })
-        .catch(() => {
-          store.dispatch(setReset(false));
-        });
-      next(action);
-      break;
-    }
-
-    case PATCH_RESET_PASSWORD: {
-      const state = store.getState();
-      const { password, passwordConfirm } = state.user;
-      const { token } = action;
-      axios.patch(`${baseUrl}/user/reset-password`, {
-        token,
-        password,
-        passwordConfirm,
-      })
-        .then((response) => {
-          if (response.data.status === 'success') {
-            store.dispatch(isLoading());
-            setTimeout(() => {
-              store.dispatch(isLoading());
-              store.dispatch(redirection());
-            }, 1500);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          store.dispatch(messageError('Demande de réinitialisation de mot de passe expirée ou invalide.'));
-        });
-      next(action);
-      break;
-    }
-
-    case GET_VERIFY_ACCOUNT: {
-      const { token } = action;
-      axios.post(`${baseUrl}/user/verify-account`, {
-        token,
-      })
-        .then((response) => {
-          if (response.data.isVerified) {
-            store.dispatch(setIsVerified(true));
-          }
-        })
-        .catch(() => {
-          store.dispatch(setIsVerified(false));
-        });
-      next(action);
-      break;
-    }
     default:
       next(action);
   }
 };
 
-export default ajaxMiddleware;
+export default userMiddleware;

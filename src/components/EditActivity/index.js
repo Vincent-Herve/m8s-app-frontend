@@ -15,6 +15,7 @@ const EditActivity = (props) => {
     document.title = 'Modification d\'activité';
   }, []);
 
+  const { token, userId } = sessionStorage;
   const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -27,16 +28,22 @@ const EditActivity = (props) => {
     // eslint-disable-next-line no-restricted-globals
     const confirmation = confirm('Etes-vous sûr de vouloir supprimer votre activité ?');
     if (confirmation) {
-      axios.delete(`http://localhost:3000/activity/${props.location.state.id}`, {})
-        .then(() => {
-          setLoading(true);
-          setMessage('Suppression en cours');
-          setTimeout(() => {
-            setLoading(false);
-            setRedirect(true);
-            refreshPage();
-          }, 700);
-        })
+      axios({
+        method: 'delete',
+        url: `http://localhost:3000/activity/${props.location.state.id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(() => {
+        setLoading(true);
+        setMessage('Suppression en cours');
+        setTimeout(() => {
+          setLoading(false);
+          setRedirect(true);
+          refreshPage();
+        }, 700);
+      })
         .catch((error) => {
           console.error(error);
         });
@@ -61,33 +68,41 @@ const EditActivity = (props) => {
       alert('Veuillez remplir tout les champs');
     }
     else if (props.location.state.current_place > free_place) {
-      alert('Il y a plus d\'utilisateur inscrit que de place disponible')
+      alert('Il y a plus d\'utilisateur inscrit que de place disponible');
     }
     else {
-      axios.patch(`http://localhost:3000/activity/${props.location.state.id}`, {
-        title,
-        description,
-        free_place,
-        location,
-        date,
-        hour,
-        tagId,
-        currentTag,
+      axios({
+        method: 'patch',
+        url: `http://localhost:3000/activity/${props.location.state.id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          title,
+          description,
+          free_place,
+          location,
+          date,
+          hour,
+          tagId,
+          currentTag,
+        },
+      }).then(() => {
+        setLoading(true);
+        setMessage('Modification en cours');
+        setTimeout(() => {
+          setLoading(false);
+          setRedirect(true);
+          refreshPage();
+        }, 700);
       })
-        .then(() => {
-          setLoading(true);
-          setMessage('Modification en cours');
-          setTimeout(() => {
-            setLoading(false);
-            setRedirect(true);
-            refreshPage();
-          }, 700);
-        })
         .catch((error) => {
           console.error(error);
         });
     }
   };
+
   const titleLabel = 'Titre';
   const descriptionLabel = 'Description';
   const free_placeLabel = 'Places disponibles';

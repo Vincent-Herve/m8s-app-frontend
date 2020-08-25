@@ -31,9 +31,7 @@ const CreateActivity = ({
     if (title === '' || description === '' || free_place === '' || location === '' || date === '' || hour === '' || tagValue === '') {
       return setMessage('Veuillez remplir tout les champs.');
     }
-    if (date < date.now()) {
-      return setMessage('Veuillez remplir tout les champs.');
-    }
+
     setMessage('');
     handleCreate();
   };

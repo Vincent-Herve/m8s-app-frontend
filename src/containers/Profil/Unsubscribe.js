@@ -4,7 +4,10 @@ import Unsubscribe from 'src/components/Profil/Unsubscribe';
 
 import { unsubscribe } from 'src/actions/user';
 
-const mapStateToProps = null;
+const mapStateToProps = (state, ownProps) => ({
+  activities: state.activities.list,
+  userId: state.user.userId,
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleUnsubscribe: () => {

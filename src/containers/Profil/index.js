@@ -9,7 +9,7 @@ import { signout } from 'src/actions/user';
 
 const mapStateToProps = (state, ownProps) => ({
   userProfil: state.user.userProfil,
-  userId: state.user.userId,
+  userId: parseInt(state.user.userId, 10),
   activities: state.activities.list,
 });
 

@@ -42,8 +42,8 @@ const Profil = ({ userProfil, userId, handleSignout, activities }) => {
       <h1>Mon profil</h1>
       <div>
         <div className="button-tab">
-          <button type="button" onClick={generateClickHandler('infoUser')}>Informations personnelles</button>
-          <button type="button" onClick={generateClickHandler('currentActivity')}>Mes activités en cours</button>
+          <button type="button" className={tab === 'infoUser' ? 'currentTab' : ''} onClick={generateClickHandler('infoUser')}>Informations personnelles</button>
+          <button type="button" className={tab === 'currentActivity' ? 'currentTab' : ''} onClick={generateClickHandler('currentActivity')}>Mes activités en cours</button>
         </div>
         {tab === 'infoUser' && (
           <section>
@@ -80,7 +80,7 @@ const Profil = ({ userProfil, userId, handleSignout, activities }) => {
                       </>
                     )}
                   </article>
-                )
+                );
               })}
             </div>
           </section>

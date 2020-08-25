@@ -1,6 +1,8 @@
+/* eslint-disable newline-per-chained-call */
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import PasswordValidator from 'password-validator';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SignupStyled from './SignupStyled';
 import Field from './Field';
@@ -22,13 +24,29 @@ const Signup = ({
     document.title = 'S\'inscrire';
   }, []);
 
+  // Create a schema
+  const schema = new PasswordValidator();
+
+  // Add properties to it
+  schema
+    .is().min(8)
+    .is().max(100)
+    .has().uppercase(1)
+    .has().lowercase(1)
+    .has().digits(1)
+    .has().symbols(1)
+    .has().not().spaces();
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if (username === '' || firstname === '' || lastname === '' || email === '' || password === '' || passwordConfirm === '') {
       setMessageError('Veuillez remplir tout les champs');
     }
     else if (password !== passwordConfirm) {
-      setMessageError('Erreur sur le mot de passe');
+      setMessageError('Mots de passe non identique');
+    }
+    else if (!schema.validate(password)) {
+      setMessageError('Le mot de passe doit contenir au moins 8 caractères dont une majuscule, une minuscule, un caractère spécial, un chiffre et pas d\'espace');
     }
     else {
       setMessageError('');
@@ -76,7 +94,7 @@ const Signup = ({
           />
           <Field
             name="passwordConfirm"
-            placeholder="Comfirmer password"
+            placeholder="Confirmer password"
             type="password"
             onChange={changeField}
             value={passwordConfirm}

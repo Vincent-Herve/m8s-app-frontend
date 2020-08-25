@@ -8,7 +8,6 @@
     "clean": "rm -rf dist",
     "clean:all": "rm -rf dist node_modules yarn.lock package-lock.json",
     "test": "cross-env NODE_PATH=./ mocha --require tests/.setup.js tests/**/*.test.js"
-
   },
   "devDependencies": {
     "@babel/core": "*",
@@ -56,6 +55,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
+    "password-validator": "^5.1.0",
     "prop-types": "*",
     "react": "*",
     "react-axios": "^2.0.3",
